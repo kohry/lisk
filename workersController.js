@@ -61,11 +61,12 @@ SCWorker.create({
 		function (err, scope) {
 			scServer.on('connection', function (socket) {
 				scope.slaveWAMPServer.upgradeToWAMP(socket);
-				socket.on('disconnect', removePeerConnection.bind(null, socket));
+				socket.on('disconnect', function () {
+					removePeerConnection.bind(null, socket);
+				});
 				socket.on('error', function (err) {
 					socket.disconnect(err.code, err.message);
 				});
-
 				insertPeerConnection(socket);
 			});
 
